@@ -1,6 +1,6 @@
 
 // import HMSPrebuilt component from Roomkit package
-import { HMSPrebuilt } from '@100mslive/roomkit-react';
+import { HMSPrebuilt} from '@100mslive/roomkit-react';
 
 // add pre-built component
 function HMSPrebuiltComponent() {

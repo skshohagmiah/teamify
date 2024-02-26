@@ -16,10 +16,10 @@ const Header = async() => {
   })
 
   return (
-   <header className='sticky top-0 left-0 right-0 border-b-2 bg-white'>
+   <header className='sticky top-0 left-0 right-0 border-b-2 bg-white w-full'>
      <div className='max-w-screen-2xl mx-auto p-2 flex items-center justify-between '>
         <div className='flex gap-4 items-center'>
-        <div className='items-center gap-2 hidden md:flex'>
+        <div className='items-center gap-2 hidden sm:flex'>
         <Logo />
         </div>
         <SelectOrg organizations={organizations} />

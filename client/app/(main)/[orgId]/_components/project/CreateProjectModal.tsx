@@ -53,7 +53,7 @@ const CreateProjectModal = () => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <Button className="w-[300px] h-[200px] rounded-mdshadow-md flex items-center justify-center m-2 border-[3px] border-dotted border-blue-400 text-xl font-medium">          
+          <Button className=" w-[95vw] md:w-[300px] h-[200px] rounded-mdshadow-md flex items-center justify-center m-2 border-[3px] border-dotted border-blue-400 text-xl font-medium">          
               Create New Project
           </Button>
         </DialogTrigger>

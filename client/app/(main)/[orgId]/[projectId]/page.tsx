@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectHeader from "./_components/header/ProjectHeader";
+import ProjectHeader from "./_components/header/Menu";
 
 const ProjectIdPage = ({
   params,
@@ -9,7 +9,7 @@ const ProjectIdPage = ({
   };
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full h-screen bg-gray-100">
     </div>
   );
 };
