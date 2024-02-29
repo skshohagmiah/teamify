@@ -3,7 +3,6 @@ import React from 'react'
 import MessagesHeader from '../_components/messages/Header'
 import { prisma } from '@/lib/db'
 import { getCurrentUser } from '@/lib/getCurrentUser'
-import Image from 'next/image'
 import ChatsContainer from '../_components/messages/ChatsContainer'
 
 const MessagesPage = async({params}:{params:{projectId:string}}) => {

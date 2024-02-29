@@ -12,8 +12,12 @@ import { Image as ImageIcon } from "lucide-react";
 import { UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 
-const ImageUpload = () => {
-    const [imageUrl, setImageUrl] = useState('');
+interface ImageUploadProps{
+  imageUrl:string,
+  setImageUrl:(url:string) => void
+}
+
+const ImageUpload = ({setImageUrl,imageUrl}:ImageUploadProps) => {
 
   return (
     <div>

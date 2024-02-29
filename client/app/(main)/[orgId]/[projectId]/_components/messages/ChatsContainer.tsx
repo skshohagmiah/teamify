@@ -4,6 +4,7 @@ import React from 'react'
 import {Member,User} from '@prisma/client'
 import { usePathname, useRouter } from 'next/navigation'
 import { createConversation } from '@/actions/messages/createConversation'
+import { formatDate } from '@/lib/formatedDate'
 
 interface ChatsContainerProps{
     currentUser:User
@@ -31,7 +32,7 @@ const ChatsContainer = ({members}:ChatsContainerProps) => {
                 <div key={member.id} className='flex flex-col gap-2 md:flex-row items-center justify-around bg-gray-50 p-1 shadow-sm rounded-sm cursor-pointer' onClick={() => handleConversationClick(member.user.id)}>
                     <div className='relative w-[50px] h-[50px]'>
                     <Image src={member.user.image as string} alt='member' fill className='rounded-full'/>
-                    <div className='absolute top-0 right-0 size-4 rounded-full bg-green-500'/>
+                    <div className={`absolute top-0 right-0 size-4 rounded-full ${member.isActive ? 'bg-green-500' : 'bg-gray-500'} `}/>
                     </div>
                     <div className='text-center'>
                         <p>{member.user.name}</p>
@@ -39,7 +40,7 @@ const ChatsContainer = ({members}:ChatsContainerProps) => {
                     </div>
                     <div>
                         <p>Last seen</p>
-                        <small>{member.createdAt.toISOString().slice(0,16)}</small>
+                        <small>{formatDate(member.lastSeen)}</small>
                     </div>
                 </div>
             ))}

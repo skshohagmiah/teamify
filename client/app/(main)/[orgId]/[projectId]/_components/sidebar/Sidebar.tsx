@@ -18,12 +18,17 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import NotificationBell from "./NotificationBell";
+
 
 const ProjectSidebar = () => {
   const { orgId, projectId } = useParams();
+
+
+
+
   return (
-    <aside className="flex group hover:w-[15rem] rounded-e-md transition-all duration-200 flex-col gap-3 p-4 bg-white/80 h-screen items-start justify-between border-r-2">
+    <aside className="flex group hover:w-[15rem] rounded-e-md transition-all duration-200 flex-col gap-3 p-4 bg-white/80 h-screen items-start justify-between border-r-2 sticky top-1 ">
 
       <div className="flex flex-col gap-4 justify-start">
         <Link href={'/'} className="flex items-center gap-2">
@@ -43,14 +48,14 @@ const ProjectSidebar = () => {
           className="text-muted-foreground flex items-center gap-2"
         >
           <MessageCircle />
-          <p className="hidden group-hover:block">Messaging</p>
+          <p className="hidden group-hover:block">Chats</p>
         </Link>
         <Link
           href={`/${orgId}/${projectId}/conference`}
           className="flex items-center gap-2"
         >
           <Video />
-          <p className="hidden group-hover:block">Conferencing</p>
+          <p className="hidden group-hover:block">Conference</p>
         </Link>
         <Link
           href={`/${orgId}/${projectId}/files`}
@@ -66,13 +71,7 @@ const ProjectSidebar = () => {
           <User />
           <p className="hidden group-hover:block">Members</p>
         </Link>
-        <Link
-          href={`/${orgId}/${projectId}/notifications`}
-          className="flex items-center gap-2"
-        >
-          <Bell />
-          <p className="hidden group-hover:block">Notifications</p>
-        </Link>
+        <NotificationBell orgId={orgId as string} projectId={projectId as string}/>
       </div>
 
       <div className="flex flex-col gap-4 items-center justify-start">
