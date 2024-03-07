@@ -2,11 +2,13 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import express from "express";
 import { v4 as uuidV4 } from "uuid";
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, { cors: "*" });
-const PORT=process.env.PORT || 3001
+const PORT=process.env.PORT || 8001
 
 
 app.get('/', (req,res) => {
