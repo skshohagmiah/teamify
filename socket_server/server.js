@@ -8,6 +8,11 @@ const server = createServer(app);
 const io = new Server(server, { cors: "*" });
 const PORT=process.env.PORT || 3001
 
+
+app.get('/', (req,res) => {
+  res.send('response from socket-server')
+})
+
 io.on("connection", (socket) => {
   //one to one messaging handling events
   socket.on("message-send", (data) => {
