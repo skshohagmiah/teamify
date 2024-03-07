@@ -42,6 +42,8 @@ model User {
   conversationsOne Conversation[] @relation(name: "userOne")
   conversationsTwo Conversation[] @relation(name: "userTwo")
   messages         Message[]
+  files            File[]
+  comments        Comment[]
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 }
@@ -65,6 +67,8 @@ model Project {
   ownerId        String       @db.ObjectId
   owner          User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   members        Member[]
+  files          File[]
+  tasks          Task[]
   organizationId String       @db.ObjectId
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
@@ -115,14 +119,62 @@ model Message {
   updatedAt      DateTime     @updatedAt
 }
 
-
 model Notification {
-    id             String       @id @default(auto()) @map("_id") @db.ObjectId
-    type String?
-    content String
-    senderName String
-    senderImage String
-    receiverId  String? @db.ObjectId
-    projectId   String @db.ObjectId
-    createdAt DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String?
+  content     String
+  senderName  String
+  senderImage String
+  receiverId  String?  @db.ObjectId
+  projectId   String   @db.ObjectId
+  createdAt   DateTime @default(now())
+}
+
+model File {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  url       String
+  type      String?
+  projectId String   @db.ObjectId
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+
+
+enum TaskStatus {
+  To_do
+  In_Progress
+  Review
+  Done
+
+}
+
+model Task {
+      id        String   @id @default(auto()) @map("_id") @db.ObjectId
+      title String
+      description String
+      assignee String[] @db.ObjectId
+      deadline DateTime?
+      status   TaskStatus @default(To_do)
+      position Int @default(1)
+      attachments String[]
+      comments Comment[]
+      projectId String @db.ObjectId
+      project Project @relation(fields: [projectId], references: [id], onDelete:Cascade)
+      createdAt DateTime @default(now())
+      updatedAt DateTime @updatedAt
+}
+
+
+model Comment {
+        id        String   @id @default(auto()) @map("_id") @db.ObjectId
+        content String
+        taskId String @db.ObjectId
+        task Task @relation(fields: [taskId],references: [id], onDelete:Cascade)
+        userId String @db.ObjectId
+        user User @relation(fields: [userId], references: [id], onDelete:Cascade)
+        createdAt DateTime @default(now())
 }

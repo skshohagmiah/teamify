@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import {
   Sheet,
@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, PaintBucket, PaintRoller, Paintbrush } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertCircle,
@@ -26,6 +26,8 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import NotificationBell from "../sidebar/NotificationBell";
+import { FaDrawPolygon } from "react-icons/fa";
 
 const MenuComponent = () => {
   const { orgId, projectId } = useParams();
@@ -47,57 +49,59 @@ const MenuComponent = () => {
                 className=" flex items-center gap-2"
               >
                 <CircuitBoard />
-                <p >Tasks</p>
+                <p>Tasks</p>
               </Link>
               <Link
                 href={`/${orgId}/${projectId}/messages`}
                 className="text-muted-foreground flex items-center gap-2"
               >
                 <MessageCircle />
-                <p >Messaging</p>
+                <p>Messaging</p>
               </Link>
               <Link
                 href={`/${orgId}/${projectId}/conference`}
                 className="flex items-center gap-2"
               >
                 <Video />
-                <p >Conferencing</p>
+                <p>Conferencing</p>
+              </Link>
+              <Link
+                href={`/${orgId}/${projectId}/draws`}
+                className="flex items-center gap-2"
+              >
+                <Paintbrush />
+                <p>Draws</p>
               </Link>
               <Link
                 href={`/${orgId}/${projectId}/files`}
                 className=" flex items-center gap-2"
               >
                 <File />
-                <p >Files</p>
+                <p>Files</p>
               </Link>
               <Link
                 href={`/${orgId}/${projectId}/members`}
                 className="flex items-center gap-2"
               >
                 <User />
-                <p >Members</p>
+                <p>Members</p>
               </Link>
-              <Link
-                href={`/${orgId}/${projectId}/notifications`}
-                className="flex items-center gap-2"
-              >
-                <Bell />
-                <p >Notifications</p>
-              </Link>
+              <div className="flex items-center gap-2">
+                <NotificationBell
+                  orgId={orgId as string}
+                  projectId={projectId as string}
+                />
+              </div>
             </div>
 
-              <Separator />
+            <Separator />
             <div className="flex flex-col gap-4 items-center justify-start">
-              <div className="flex items-center gap-2">
-                <Settings />
-                <p >Settings</p>
-              </div>
               <div
                 className="flex items-center gap-2"
                 onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
               >
                 <LogOut />
-                <p >Logout</p>
+                <p>Logout</p>
               </div>
             </div>
           </aside>

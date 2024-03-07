@@ -11,6 +11,7 @@ import { updateLastSeen } from "@/actions/messages/updateLastSeen";
 import { formatDate } from "@/lib/formatedDate";
 import { createNotification } from "@/actions/notification/createNotification";
 import { User } from "@prisma/client";
+import { isOtherUserActive } from "@/actions/messages/updateMember";
 
 const MessageInput = ({
   user,
@@ -36,19 +37,24 @@ const MessageInput = ({
       userId: user.id,
     });
     await createMessage(conversationId as string, text, imageUrl);
-    await createNotification({
-      content: `${text}`,
-      projectId: projectId as string,
-      isGroup: false,
-      receiverId: otherUserId,
-    });
-    socket?.emit("notification-on-off", true);
-    socket?.emit("send-notification", {
-      content: text,
-      senderName: user.name,
-      senderImage: user.image,
-      receiverId: otherUserId,
-    });
+
+    const isMemberActive = await isOtherUserActive(
+      otherUserId,
+      projectId as string
+    );
+
+    if (!isMemberActive) {
+      await createNotification({
+        content: `has messaged ${text}`,
+        projectId: projectId as string,
+        isGroup: false,
+        receiverId: otherUserId,
+      });
+      socket?.emit("notification-on-off", true);
+      socket?.emit("single-notification", {
+        receiverId: otherUserId,
+      });
+    }
 
     let timeOutID;
 
@@ -67,7 +73,7 @@ const MessageInput = ({
   return (
     <form
       onSubmit={handleOnSubmit}
-      className="flex items-center justify-between gap-2 p-4 bg-gray-200 w-full sticky  bottom-0"
+      className="flex items-center justify-between gap-2 p-4 bg-gray-200 w-full sticky  bottom-0  max-w-screen-2xl mx-auto"
     >
       <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} />
       <Input

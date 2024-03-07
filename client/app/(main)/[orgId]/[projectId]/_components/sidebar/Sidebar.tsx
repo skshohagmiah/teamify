@@ -10,6 +10,7 @@ import {
   Group,
   LogOut,
   MessageCircle,
+  Paintbrush,
   Settings,
   User,
   Video,
@@ -28,7 +29,7 @@ const ProjectSidebar = () => {
 
 
   return (
-    <aside className="flex group hover:w-[15rem] rounded-e-md transition-all duration-200 flex-col gap-3 p-4 bg-white/80 h-screen items-start justify-between border-r-2 sticky top-1 ">
+    <aside className="flex group hover:w-[15rem] rounded-e-md transition-all duration-200 gap-3 p-4 bg-blue-50 h-screen items-start justify-between border-r-2 sticky top-1 ">
 
       <div className="flex flex-col gap-4 justify-start">
         <Link href={'/'} className="flex items-center gap-2">
@@ -56,6 +57,13 @@ const ProjectSidebar = () => {
         >
           <Video />
           <p className="hidden group-hover:block">Conference</p>
+        </Link>
+        <Link
+          href={`/${orgId}/${projectId}/draws`}
+          className="flex items-center gap-2"
+        >
+          <Paintbrush />
+          <p className="hidden group-hover:block">Draws</p>
         </Link>
         <Link
           href={`/${orgId}/${projectId}/files`}

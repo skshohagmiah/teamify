@@ -40,7 +40,7 @@ const ConversationBody = ({
   }, [messages.length]);
 
   return (
-    <div className="min-h-screen overflow-y-scroll flex-col flex justify-end">
+    <div className="min-h-screen overflow-y-scroll flex-col flex justify-end  max-w-screen-2xl mx-auto w-full">
       {messages?.map((message) => (
         <div key={message.id} className="" ref={messageRef}>
           {message.userId === currentUser.id ? (

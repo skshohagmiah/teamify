@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import CreateMember from "../_components/members/CreateMember";
 import DeleteMember from "../_components/members/DeleteMember";
+import DesktopHeader from "../_components/header/DesktopHeader";
 
 const MembersPage = async ({ params }: { params: { projectId: string } }) => {
   const members = await prisma.member.findMany({
@@ -18,16 +19,17 @@ const MembersPage = async ({ params }: { params: { projectId: string } }) => {
 
 
   return (
-    <div className="w-full bg-gray-100 h-screen">
-      <div className="flex items-center justify-between border-b-2 p-2 bg-white">
+    <div className="w-full bg-white">
+      <DesktopHeader />
+      <div className="flex items-center justify-between border-b-2 p-2  max-w-screen-2xl mx-auto">
         <p className="text-xl font-semibold">All Members</p>
         <CreateMember />
       </div>
-      <div className="p-2">
+      <div className="p-2  max-w-screen-2xl mx-auto">
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center justify-around flex-col md:flex-row gap-2 bg-gray-200 p-1 rounded-sm mb-2"
+            className="flex items-center justify-around flex-col md:flex-row gap-2 bg-gray-50 p-1 rounded-sm mb-2"
           >
             <Image
               src={member.user.image as string}

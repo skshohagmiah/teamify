@@ -4,7 +4,7 @@ import MenuComponent from './Menu'
 
 const MobileHeader = () => {
   return (
-    <header className='flex items-center justify-between p-2 border-b-2'>
+    <header className='flex items-center justify-between p-2 bg-white border-b-2'>
         <Logo />
         <MenuComponent />
     </header>

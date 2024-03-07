@@ -1,5 +1,5 @@
 "use client";
-import { updateUnActive } from "@/actions/messages/updateMemberActive";
+import { updateUnActive } from "@/actions/messages/updateMember";
 import useSocket from "@/hooks/useSocket";
 import React from "react";
 

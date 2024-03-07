@@ -4,6 +4,7 @@ import React from 'react'
 import ConversationHeader from './_components/ConversationHeader'
 import MessageInput from './_components/MessageInput'
 import ConversationBody from './_components/ConversationBody'
+import DesktopHeader from '../../_components/header/DesktopHeader'
 
 const ConversationIdPage = async({params}:{params:{conversationId:string,projectId:string}}) => {
     const currentUser = await getCurrentUser()
@@ -41,7 +42,8 @@ const ConversationIdPage = async({params}:{params:{conversationId:string,project
     const otherUser = conversation?.userOne.id === currentUser?.id ? conversation?.userTwo : conversation?.userOne
 
   return (
-    <div className='w-full flex flex-col  min-h-screen bg-gray-100 '>
+    <div className='w-full flex flex-col  min-h-screen bg-white'>
+        <DesktopHeader />
         <ConversationHeader otherUser={otherUser!} projectId={params.projectId}/>
         <ConversationBody storedMessages={messages!} currentUser={currentUser!} otherUser={otherUser!}/>
         <MessageInput user={currentUser!} memberId={member?.id || ''} otherUserId={otherUser?.id as string}/>

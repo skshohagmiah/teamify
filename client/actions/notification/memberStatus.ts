@@ -12,7 +12,7 @@ export async function memberStatus(projectId:string) {
         }
     })
 
-    return member
+    return {member,currentUser}
 } 
 
 

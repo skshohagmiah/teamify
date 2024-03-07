@@ -1,11 +1,12 @@
 import { Server } from "socket.io";
 import { createServer } from "http";
-import express, { text } from "express";
+import express from "express";
 import { v4 as uuidV4 } from "uuid";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, { cors: "*" });
+const PORT=process.env.PORT || 3001
 
 io.on("connection", (socket) => {
   //one to one messaging handling events
@@ -48,41 +49,40 @@ io.on("connection", (socket) => {
 
 
 
-
-  //notification handling events
-
-  socket.on('notification-on-off', (data) => {
-    console.log(data,socket.id)
-    io.send(socket.id).emit('notificationChange', data)
+  // notification events
+  socket.on('notification-indicator', (data) => {
+    io.emit(`notification-receive-for-${data.receiverId}`, data)
   })
 
-  socket.on('send-notification', (data) => {
-    const id = uuidV4();
-    const notificationData = {
-      id,
-      content:data.content,
-      createdAt: new Date(),
-      senderName:data.senderName,
-      senderImage: data.senderImage
-    }
-    
-    io.emit(`${data.receiverId}`, notificationData)
-  })
-
-  socket.on('group-notification', (data) => {
-    socket.join(data.roomId)
-    const id = uuidV4();
-    const notificationData = {
-      id,
-      content:data.content,
-      createdAt: new Date(),
-      senderName:data.senderName,
-      senderImage: data.senderImage
-    }
+  socket.on('memberActiveChange', (data) => {
     console.log(data)
-    io.emit(`${data.roomId}`,notificationData)
+    io.emit('memberActiveChange', data)
   })
+
+
+// real time drawing events
+socket.on('draw', (data,projectId) => {
+  console.log(projectId)
+  socket.join(projectId);
+
+  socket.broadcast.emit('draw', data)
+})
+
+socket.on('clearDraw', (data,projectId) => {
+  console.log(data)
+  socket.join(projectId);
+
+  socket.broadcast.emit('clearDraw', data)
+})
+
+socket.on('clearRect', (data,projectId) => {
+  console.log(data)
+  socket.join(projectId);
+
+  socket.broadcast.emit('clearRect', data)
+})
 
 });
 
-server.listen(3001, () => console.log("server listening on port 3001"));
+
+server.listen(PORT, () => console.log("server listening on port ", PORT));

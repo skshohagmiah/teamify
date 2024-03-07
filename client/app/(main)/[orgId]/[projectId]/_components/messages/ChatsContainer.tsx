@@ -27,9 +27,10 @@ const ChatsContainer = ({members}:ChatsContainerProps) => {
     }
 
   return (
-    <div className='space-y-2 p-2'>
+    <div className='space-y-2 p-2 max-w-screen-2xl mx-auto'>
             {members.map(member => (
-                <div key={member.id} className='flex flex-col gap-2 md:flex-row items-center justify-around bg-gray-50 p-1 shadow-sm rounded-sm cursor-pointer' onClick={() => handleConversationClick(member.user.id)}>
+                <div key={member.id} className='flex flex-col gap-2 md:flex-row items-center justify-between bg-gray-50 p-1 shadow-sm rounded-sm cursor-pointer' onClick={() => handleConversationClick(member.user.id)}>
+                    <div className='flex items-center gap-4'>
                     <div className='relative w-[50px] h-[50px]'>
                     <Image src={member.user.image as string} alt='member' fill className='rounded-full'/>
                     <div className={`absolute top-0 right-0 size-4 rounded-full ${member.isActive ? 'bg-green-500' : 'bg-gray-500'} `}/>
@@ -37,6 +38,7 @@ const ChatsContainer = ({members}:ChatsContainerProps) => {
                     <div className='text-center'>
                         <p>{member.user.name}</p>
                         <small>{member.user.email}</small>
+                    </div>
                     </div>
                     <div>
                         <p>Last seen</p>

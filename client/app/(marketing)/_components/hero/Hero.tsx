@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import SignInModal from "../modal/SignInModal";
+import HeroImage from '@/public/hero.png'
 
 const Hero = () => {
   return (
@@ -24,7 +25,7 @@ const Hero = () => {
           </div>
         </div>
         <div className="md:basis-[50%] relative w-[100%] h-[20rem] md:h-[30rem]">
-          <Image src={"/hero.png"} alt="hero image" fill />
+          <Image src={HeroImage} alt="hero image" fill />
         </div>
       </div>
     </section>

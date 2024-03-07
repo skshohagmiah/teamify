@@ -4,6 +4,7 @@ import MessagesHeader from '../_components/messages/Header'
 import { prisma } from '@/lib/db'
 import { getCurrentUser } from '@/lib/getCurrentUser'
 import ChatsContainer from '../_components/messages/ChatsContainer'
+import DesktopHeader from '../_components/header/DesktopHeader'
 
 const MessagesPage = async({params}:{params:{projectId:string}}) => {
 
@@ -24,7 +25,8 @@ const MessagesPage = async({params}:{params:{projectId:string}}) => {
     console.log(members)
 
   return (
-    <div className='w-full bg-gray-100 h-screen'>
+    <div className='w-full bg-white h-screen '>
+        <DesktopHeader />
         <MessagesHeader />
         <ChatsContainer members={members!} currentUser={currentUser!}/>
     </div>

@@ -50,3 +50,42 @@ export async function updateUnActive(projectId:string) {
         console.log('member active update error', error)
     }
 }
+
+
+export async function isOtherUserActive(otherUserId:string,projectId:string) {
+    try {
+        const member = await prisma.member.findFirst({
+            where:{
+                userId:otherUserId,
+                projectId:projectId
+            }
+        })
+
+        return member?.isActive
+        
+    } catch (error) {
+        
+    }
+}
+
+export async function otherMemberId(conversationId:string) {
+    try {
+        const currentUser = await getCurrentUser();
+        const conversation = await prisma.conversation.findFirst({
+            where:{
+                id:conversationId,
+            },
+            include:{
+                userOne:true,
+                userTwo:true
+            }
+        })
+
+        const otherUserId = currentUser?.id === conversation?.userOne.id ? conversation?.userTwo.id : conversation?.userOne.id
+
+        return otherUserId
+        
+    } catch (error) {
+        
+    }
+}

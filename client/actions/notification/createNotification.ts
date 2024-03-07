@@ -40,7 +40,7 @@ export async function createNotification({
             content,
             senderImage:
               "https://utfs.io/f/d6420ed2-af9f-4c74-830b-ae53315d4ca9-5ls31v.webp",
-            senderName: "Group",
+            senderName: "From Group",
             projectId,
             receiverId: member.userId,
           },
@@ -77,6 +77,6 @@ export async function createNotification({
       }
     }
   } catch (error) {
-    console.error("notification creation error:", error); // Use console.error for error messages
+    console.error("notification creation error:", error); 
   }
 }

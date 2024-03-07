@@ -23,7 +23,7 @@ const ConversationHeader = async({otherUser,projectId}:{otherUser:User,projectId
 
 
   return (
-    <div className=' bg-white flex items-center justify-between p-1 border-b-2 sticky top-0 w-full' >
+    <div className=' bg-white flex items-center justify-between p-1 border-b-2 sticky top-0 w-full  max-w-screen-2xl mx-auto' >
             <div className='flex items-center gap-2'>
             <div className='relative w-[50px] h-[50px]'>
                     <Image src={otherUser?.image as string} alt='member' fill className='rounded-full'/>

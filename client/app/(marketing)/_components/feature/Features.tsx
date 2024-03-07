@@ -1,5 +1,7 @@
 import Image from "next/image";
 import React from "react";
+import calling from '@/public/calling.jpg'
+import tasks from '@/public/tasks.webp'
 
 const Features = () => {
   return (
@@ -7,9 +9,9 @@ const Features = () => {
       <h2 className="text-2xl md:text-3xl font-semibold m-4">
         What Features We Offers
       </h2>
-      <div className="flex items-center flex-wrap lg:flex-nowrap mt-4 lg:m-8">
+      <div className="flex items-center gap-6 flex-wrap lg:flex-nowrap mt-4 lg:m-8">
         <div className="relative w-[100%] h-[20rem] shrink-0 lg:shrink">
-          <Image src={"/calling.jpg"} alt="calling image" fill />
+          <Image src={calling} alt="calling image" fill className="object-cover" />
         </div>
         <div>
           <h3 className="text-2xl font-medium mb-1">RealTime messaging and audio video Call</h3>
@@ -22,7 +24,7 @@ const Features = () => {
         </div>
       </div>
 
-      <div className="flex items-center flex-wrap-reverse lg:flex-nowrap mt-4 lg:m-8">
+      <div className="flex items-center gap-6 flex-wrap-reverse lg:flex-nowrap mt-4 lg:m-8">
         <div>
           <h3 className="text-2xl font-medium mb-1">Tasks assignment Task deadlines And more</h3>
           <p className="text-sm p-2">
@@ -33,7 +35,7 @@ const Features = () => {
           </p>
         </div>
         <div className="relative w-[100%] h-[20rem] shrink-0 lg:shrink">
-          <Image src={"/tasks.webp"} alt="calling image" fill />
+          <Image src={tasks} alt="calling image" fill className="object-cover"/>
         </div>
       </div>
     </section>

@@ -3,6 +3,7 @@ import NotificationHeader from "../_components/notifications/NotificationHeader"
 import NotificationBody from "../_components/notifications/NotificationBody";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import { prisma } from "@/lib/db";
+import DesktopHeader from "../_components/header/DesktopHeader";
 
 const NotificationPage = async ({
   params,
@@ -14,13 +15,17 @@ const NotificationPage = async ({
     where: {
       receiverId: currentUser?.id,
       projectId: params.projectId,
+    },
+    orderBy:{
+      createdAt:'desc'
     }
   });
 
 
 
   return (
-    <div className="w-full bg-gray-100 min-h-screen">
+    <div className="w-full bg-white min-h-screen">
+      <DesktopHeader />
       <NotificationBody
         prevNotifications={notifications!}
         currentUser={currentUser!}

@@ -1,6 +1,8 @@
 // @ts-nocheck
 "use client";
 
+import { otherMemberId } from "@/actions/messages/updateMember";
+import { createNotification } from "@/actions/notification/createNotification";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,7 +20,7 @@ export default function VideoCallPage() {
 
   const configuration = {
     iceServers: [
-      { urls: "stun:stun.l.google.com:19302" }, // Google STUN server
+      { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun.services.mozilla.com" },
       { urls: "stun:numb.viagenie.ca" },
     ],
@@ -34,6 +36,23 @@ export default function VideoCallPage() {
         audio: true,
       });
       setLocalStream(stream);
+
+      const otherUserId = await otherMemberId(ROOM_ID);
+
+
+      const onCreateNotication = async () => {
+        await createNotification({
+          content: `has Called you, go to chats`,
+          projectId: projectId as string,
+          isGroup: false,
+          receiverId: otherUserId,
+        });
+        socket?.emit("single-notification", {
+          receiverId: otherUserId,
+        });
+        socket.emit('notification-indicator', {receiverId:otherMemberId,shouldIndicate:true})
+      }
+      onCreateNotication()
 
       socket.emit("join room", ROOM_ID);
 
@@ -55,6 +74,9 @@ export default function VideoCallPage() {
     };
 
     initialize();
+
+    
+
 
     return () => {
       if (localStream) {
@@ -160,7 +182,7 @@ export default function VideoCallPage() {
   };
 
   return (
-    <div className="h-[90vh] w-full p-4 space-y-2 bg-gray-100">
+    <div className="h-[90vh] w-full p-4 space-y-2 bg-gray-50">
       <div className="flex items-center justify-between gap-2 flex-col lg:flex-row h-full w-full">
         {localStream && (
           <video

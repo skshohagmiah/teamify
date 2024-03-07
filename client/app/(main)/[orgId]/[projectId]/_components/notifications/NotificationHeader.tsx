@@ -17,7 +17,7 @@ const NotificationHeader = ({setNotifications}:{setNotifications:(notifications:
   }
 
   return (
-    <div className='p-2 flex items-center justify-between sticky top-0 bg-white border-b-2'>
+    <div className='p-2 flex items-center justify-between sticky top-0 bg-white  max-w-screen-2xl mx-auto border-b-2'>
         <h3 className='text-lg font-semibold'>Your Recent Notifications</h3>
         <Button onClick={handleNotifcationsDelete} variant={'destructive'}>{loading ? <Loader2 className='animate-spin'/> : 'Clear All Notification'}</Button>
     </div>
