@@ -3,7 +3,6 @@ import FilesHeader from "../_components/files/FilesHeader";
 import { prisma } from "@/lib/db";
 import Image from "next/image";
 import FileOptions from "../_components/files/FileOptions";
-import { url } from "inspector";
 import DesktopHeader from "../_components/header/DesktopHeader";
 
 const FilesPage = async ({ params }: { params: { projectId: string } }) => {

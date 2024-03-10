@@ -13,9 +13,9 @@ const MessagesPage = async({params}:{params:{projectId:string}}) => {
     const members = await prisma.member.findMany({
         where:{
             projectId: params.projectId,
-            // NOT:{
-            //     userId:currentUser?.id
-            // }
+            NOT:{
+                userId:currentUser?.id
+            }
         },
         include:{
             user:true

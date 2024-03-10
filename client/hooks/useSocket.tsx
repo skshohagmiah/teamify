@@ -6,7 +6,7 @@ const useSocket = () => {
     const [socket,setSocket] = useState<Socket>()
 
     useEffect(() => {
-        const socket = io("http://localhost:3001");
+        const socket = io("http://ec2-13-234-135-50.ap-south-1.compute.amazonaws.com:3001/");
 
         setSocket(socket)
 

@@ -9,7 +9,7 @@ Teamify is a comprehensive team collaboration platform designed to streamline ta
 To clone the project repository and set up the development environment, follow these steps:
 
 ```bash
-git clone [https://github.com/your-username/teamify.git](https://github.com/skshohagmiah/teamify.git)
+git clone [https://github.com/skshohagmiah/teamify.git](https://github.com/skshohagmiah/teamify.git)
 cd teamify
 
 ```
@@ -67,5 +67,8 @@ npm run dev
 ##### Express.js: A web application framework for Node.js, used for building the server-side of the application.
 
 ##### Socket.io: A library for real-time, bidirectional communication between web clients and servers.
+
+
+## Project Link : ( Live Link)(https://teamify-tau.vercel.app/)
 
 
