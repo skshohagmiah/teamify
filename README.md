@@ -34,6 +34,8 @@ npm run dev
 
 ## Features
 
+##### Task Management: Organize tasks, assign them to team members, set deadlines, track task status, and monitor progress.
+
 ##### Real-Time Messaging and Video Calling: Seamlessly communicate with team members through real-time messaging and one-to-one video calling using WebRTC technology.
 
 ##### Real-Time Video Conferencing: Conduct video conferences with multiple participants using the 100ms library for real-time communication.
