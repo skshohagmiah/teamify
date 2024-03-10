@@ -40,30 +40,30 @@ npm run dev
 
 ##### Real-Time Drawing: Collaboratively draw on a shared canvas with multiplayer cursors and text-write features.
 
-### File Sharing: Share files within the project with team members for easy collaboration and access to project-related resources.
+##### File Sharing: Share files within the project with team members for easy collaboration and access to project-related resources.
 
-### Member Management: Add and manage members within the project, assigning roles and permissions as needed.
+##### Member Management: Add and manage members within the project, assigning roles and permissions as needed.
 
-### Real-Time Notifications: Receive notifications in real-time for various events such as task assignments, video calls, file sharing, etc.
+##### Real-Time Notifications: Receive notifications in real-time for various events such as task assignments, video calls, file sharing, etc.
 
 ## Tech Stacks
 
-Next.js 14: A React framework for building server-side rendered web applications.
+##### Next.js 14: A React framework for building server-side rendered web applications.
 
-Prisma: A modern database toolkit for Node.js and TypeScript.
+##### Prisma: A modern database toolkit for Node.js and TypeScript.
 
-Auth.js: A library for authentication and authorization management.
+##### Auth.js: A library for authentication and authorization management.
 
-MongoDB: A NoSQL database for storing project data and user information.
+##### MongoDB: A NoSQL database for storing project data and user information.
 
-Chakra UI: A simple, modular and accessible component library for React applications.
+##### Chadcn UI: A simple, modular and accessible component library for React applications.
 
-Tailwind CSS: A utility-first CSS framework for building custom designs quickly.
+##### Tailwind CSS: A utility-first CSS framework for building custom designs quickly.
 
-Node.js: A JavaScript runtime for building scalable and high-performance applications.
+##### Node.js: A JavaScript runtime for building scalable and high-performance applications.
 
-Express.js: A web application framework for Node.js, used for building the server-side of the application.
+##### Express.js: A web application framework for Node.js, used for building the server-side of the application.
 
-Socket.io: A library for real-time, bidirectional communication between web clients and servers.
+##### Socket.io: A library for real-time, bidirectional communication between web clients and servers.
 
 
