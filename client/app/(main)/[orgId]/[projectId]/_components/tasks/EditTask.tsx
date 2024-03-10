@@ -36,8 +36,8 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
   const [deadlineDate, setDeadlineDate] = useState<Date>();
   const [status, setStatus] = useState(TaskStatus.To_do);
   const [attahment, setAttahment] = useState("");
+  const [progres, setProgress] = useState(0)
   const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const { orgId, projectId, taskId } = useParams();
@@ -46,7 +46,7 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
 
   const handleTaskUpdate = async() => {
     setLoading(true);
-    await updateTask(taskId as string,description,deadlineDate as Date,status,attahment)
+    await updateTask(taskId as string,description,deadlineDate as Date,status,attahment, progres)
     setLoading(false)
     router.refresh()
     setIsOpen(false)
@@ -77,6 +77,15 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
               <Input
                 placeholder="task description"
                 onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2"
+              />
+            </div>
+            <div>
+              <Label htmlFor="progresss">Update progress in percentage :</Label>
+              <Input
+                placeholder="update progres in number"
+                type="number"
+                onChange={(e) => setProgress(Number(e.target.value))}
                 className="w-full p-2"
               />
             </div>
@@ -131,7 +140,7 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
             <div className="flex items-center justify-end">
               <Button
                 type="submit"
-                disabled={loading || !description}
+                disabled={loading}
                 onClick={handleTaskUpdate}
               >
                 {loading ? <Loader2 className="animate-spin" /> : "Update"}

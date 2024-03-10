@@ -6,7 +6,10 @@ import { Circle, Pen, PencilLine, RectangleHorizontal } from "lucide-react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { getCurrentActiveUser } from "@/actions/member/getActiveMembers";
+import { User } from "@prisma/client";
 
+// Interface for drawing data
 interface DrawingData {
   x: number;
   y: number;
@@ -18,6 +21,7 @@ interface DrawingData {
   endY?: number;
 }
 
+// Enumeration for drawing modes
 enum DrawingMode {
   Freehand,
   Rectangle,
@@ -26,7 +30,10 @@ enum DrawingMode {
 }
 
 const DrawingCanvas = () => {
+  // Ref for canvas element
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // State variables
   const [isDrawing, setIsDrawing] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
@@ -35,9 +42,32 @@ const DrawingCanvas = () => {
   const [color, setColor] = useState("black");
   const [mode, setMode] = useState<DrawingMode>(DrawingMode.Freehand);
   const [drawingData, setDrawingData] = useState<DrawingData[]>([]);
+  const [realtimeCursors, setRealtimeCursors] = useState<
+    { x: number; y: number; name: string }[]
+  >([]);
+  const [textData, setTextData] = useState<
+    { x: number; y: number; text: string }[]
+  >([]);
+  const [inputPosition, setInputPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  // Other hooks
   const { socket } = useSocket();
   const { projectId, orgId } = useParams();
 
+  //get current user
+  useEffect(() => {
+    const handleCurrentUser = async () => {
+      const user = await getCurrentActiveUser();
+      setCurrentUser(user!);
+    };
+    handleCurrentUser();
+  }, []);
+
+  // Effect for drawing data changes
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
@@ -48,6 +78,76 @@ const DrawingCanvas = () => {
     });
   }, [drawingData]);
 
+  // Effect for listening to socket events
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0);
+    drawingData.forEach((data) => {
+      drawShape(context!, data);
+    });
+
+    realtimeCursors.forEach((cursor) => {
+      drawCursor(context!, cursor);
+    });
+
+    textData.forEach((text) => {
+      context!.fillStyle = color;
+      context!.font = "16px Arial";
+      context!.fillText(text.text, text.x, text.y);
+    });
+  }, [drawingData, realtimeCursors, textData, color]);
+
+  // Effect for handling socket events
+  useEffect(() => {
+    socket?.on("cursor", (cursorData) => {
+      setRealtimeCursors((prevCursors) => {
+        const existingCursorIndex = prevCursors.findIndex(
+          (cursor) => cursor.name === cursorData.name
+        );
+        if (existingCursorIndex !== -1) {
+          prevCursors[existingCursorIndex] = cursorData;
+          return [...prevCursors];
+        } else {
+          return [...prevCursors, cursorData];
+        }
+      });
+    });
+
+    socket?.on("draw", (drawData: DrawingData) => {
+      setDrawingData((prevData) => [...prevData, drawData]);
+    });
+
+    socket?.on(
+      "addText",
+      (textData: { x: number; y: number; text: string }[]) => {
+        setTextData(textData);
+      }
+    );
+
+    socket?.on("clearRect", (data) => {
+      const canvas = canvasRef.current;
+      const context = canvas?.getContext("2d");
+      context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0);
+      setDrawingData(data);
+    });
+
+    socket?.on("clear", () => {
+      setDrawingData([]);
+      setTextData([]);
+    });
+
+    return () => {
+      socket?.off("cursor");
+      socket?.off("draw");
+      socket?.off("addText");
+      socket?.off("clearRect");
+      socket?.off("clear");
+    };
+  }, [socket]);
+
+  // Function to draw shapes
   const drawShape = (
     context: CanvasRenderingContext2D | null,
     data: DrawingData
@@ -79,210 +179,227 @@ const DrawingCanvas = () => {
     }
   };
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
+  // Function to draw cursors
+  const drawCursor = (
+    context: CanvasRenderingContext2D | null,
+    cursor: { x: number; y: number; name: string }
+  ) => {
+    if (!context) return;
 
-    const startDrawing = (event: MouseEvent) => {
-      setIsDrawing(true);
+    context.beginPath();
+    context.arc(cursor.x, cursor.y, 5, 0, 2 * Math.PI);
+    context.fillStyle = "blue";
+    context.fill();
+    context.fillText(cursor.name, cursor.x + 10, cursor.y - 10);
+  };
+
+  // Function to start drawing
+  const startDrawing = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const canvasBounds = canvas.getBoundingClientRect();
+    setStartX(event.clientX - canvasBounds.left);
+    setStartY(event.clientY - canvasBounds.top);
+    setEndX(event.clientX - canvasBounds.left);
+    setEndY(event.clientY - canvasBounds.top);
+  };
+
+  // Function to draw
+  const draw = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    socket?.emit(
+      "cursor",
+      {
+        x: event.clientX,
+        y: event.clientY,
+        name: currentUser?.name,
+      },
+      projectId
+    );
+
+    setEndX(event.clientX);
+    setEndY(event.clientY);
+
+    if (mode === DrawingMode.Freehand) {
+      context.strokeStyle = color;
+      context.lineJoin = "round";
+      context.lineWidth = 3;
+      context.beginPath();
+      context.moveTo(startX, startY);
+      context.lineTo(event.clientX, event.clientY);
+      context.closePath();
+      context.stroke();
+
+      socket?.emit(
+        "draw",
+        {
+          x: startX,
+          y: startY,
+          color,
+          mode: DrawingMode.Freehand,
+          endX: event.clientX,
+          endY: event.clientY,
+        },
+        projectId
+      );
+
+      setDrawingData((prevData) => [
+        ...prevData,
+        {
+          x: startX,
+          y: startY,
+          color,
+          mode: DrawingMode.Freehand,
+          endX: event.clientX,
+          endY: event.clientY,
+        },
+      ]);
+
       setStartX(event.clientX);
       setStartY(event.clientY);
-      setEndX(event.clientX);
-      setEndY(event.clientY);
-    };
+    } else {
+      socket?.emit("clearRect", drawingData, projectId);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
-    const draw = (event: MouseEvent) => {
-      if (!isDrawing || !context) return;
+      drawingData.forEach((data) => {
+        drawShape(context, data);
+      });
 
-      setEndX(event.clientX);
-      setEndY(event.clientY);
-
-      // Draw based on the current mode
-      if (mode === DrawingMode.Freehand) {
-        // Draw freehand path
+      if (mode === DrawingMode.Rectangle) {
         context.strokeStyle = color;
-        context.lineJoin = "round";
-        context.lineWidth = 3;
-        context.beginPath();
-        context.moveTo(startX, startY);
-        context.lineTo(endX, endY);
-        context.closePath();
-        context.stroke();
+        context.strokeRect(
+          startX,
+          startY,
+          event.clientX - startX,
+          event.clientY - startY
+        );
 
-        // Emit drawing data to the server
         socket?.emit(
           "draw",
           {
             x: startX,
             y: startY,
             color,
-            mode: DrawingMode.Freehand,
-            endX,
-            endY,
+            mode: DrawingMode.Rectangle,
+            width: event.clientX - startX,
+            height: event.clientY - startY,
+            endX: event.clientX,
+            endY: event.clientY,
           },
           projectId
         );
+      } else if (mode === DrawingMode.Circle) {
+        context.strokeStyle = color;
+        const radius = Math.sqrt(
+          Math.pow(event.clientX - startX, 2) +
+            Math.pow(event.clientY - startY, 2)
+        );
+        context.beginPath();
+        context.arc(startX, startY, radius, 0, Math.PI * 2);
+        context.stroke();
 
-        // Add freehand data to drawing data
-        setDrawingData((prevData) => [
-          ...prevData,
+        socket?.emit(
+          "draw",
           {
             x: startX,
             y: startY,
             color,
-            mode: DrawingMode.Freehand,
-            endX,
-            endY,
+            mode: DrawingMode.Circle,
+            width: event.clientX - startX,
+            height: event.clientY - startY,
+            endX: event.clientX,
+            endY: event.clientY,
           },
-        ]);
+          projectId
+        );
+      } else if (mode === DrawingMode.Line) {
+        context.strokeStyle = color;
+        context.beginPath();
+        context.moveTo(startX, startY);
+        context.lineTo(event.clientX, event.clientY);
+        context.stroke();
 
-        // Update start point for the next segment
-        setStartX(endX);
-        setStartY(endY);
-      } else {
-        // Clear previous drawings
-        socket?.emit("clearRect", drawingData, projectId);
-        context.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0);
-
-        // Redraw previous drawings
-        drawingData.forEach((data) => {
-          drawShape(context, data);
-        });
-
-        // Draw the current shape in real-time
-        if (mode === DrawingMode.Rectangle) {
-          context.strokeRect(
-            startX,
-            startY,
-            event.clientX - startX,
-            event.clientY - startY
-          );
-          socket?.emit(
-            "draw",
-            {
-              x: startX,
-              y: startY,
-              color,
-              height: event.clientY - startY,
-              width: event.clientX - startX,
-              mode: DrawingMode.Rectangle,
-              endX,
-              endY,
-            },
-            projectId
-          );
-        } else if (mode === DrawingMode.Circle) {
-          const radius = Math.sqrt(
-            Math.pow(event.clientX - startX, 2) +
-              Math.pow(event.clientY - startY, 2)
-          );
-          context.beginPath();
-          context.arc(startX, startY, radius, 0, Math.PI * 2);
-          context.stroke();
-
-          socket?.emit(
-            "draw",
-            {
-              x: startX,
-              y: startY,
-              color,
-              height: event.clientY - startY,
-              width: event.clientX - startX,
-              mode: DrawingMode.Circle,
-              endX,
-              endY,
-            },
-            projectId
-          );
-        } else if (mode === DrawingMode.Line) {
-          context.beginPath();
-          context.moveTo(startX, startY);
-          context.lineTo(event.clientX, event.clientY);
-          context.stroke();
-
-          socket?.emit(
-            "draw",
-            {
-              x: startX,
-              y: startY,
-              color,
-              height: event.clientY - startY,
-              width: event.clientX - startX,
-              mode: DrawingMode.Line,
-              endX,
-              endY,
-            },
-            projectId
-          );
-        }
-      }
-    };
-
-    const endDrawing = () => {
-      if (isDrawing) {
-        // Add the final shape data to drawing data
-        setDrawingData((prevData) => [
-          ...prevData,
+        socket?.emit(
+          "draw",
           {
             x: startX,
             y: startY,
             color,
-            mode,
-            width: endX - startX,
-            height: endY - startY,
-            endX,
-            endY,
+            mode: DrawingMode.Line,
+            endX: event.clientX,
+            endY: event.clientY,
           },
-        ]);
-        setIsDrawing(false);
+          projectId
+        );
       }
-    };
+    }
+  };
 
-    canvas?.addEventListener("mousedown", startDrawing);
-    canvas?.addEventListener("mousemove", draw);
-    canvas?.addEventListener("mouseup", endDrawing);
-    canvas?.addEventListener("mouseout", endDrawing);
+  // Function to end drawing
+  const endDrawing = () => {
+    if (isDrawing) {
+      setDrawingData((prevData) => [
+        ...prevData,
+        {
+          x: startX,
+          y: startY,
+          color,
+          mode,
+          width: endX - startX,
+          height: endY - startY,
+          endX,
+          endY,
+        },
+      ]);
+      setIsDrawing(false);
+    }
+  };
 
-    return () => {
-      canvas?.removeEventListener("mousedown", startDrawing);
-      canvas?.removeEventListener("mousemove", draw);
-      canvas?.removeEventListener("mouseup", endDrawing);
-      canvas?.removeEventListener("mouseout", endDrawing);
-    };
-  }, [isDrawing, startX, startY, endX, endY, color, mode, socket]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    socket?.on("clearRect", (data) => {
-      context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0);
-      setDrawingData(data);
-    });
-
-    socket?.on("draw", (data: DrawingData) => {
-      setDrawingData((prevData) => [...prevData, data]);
-    });
-    socket?.on("clearDraw", (data) => {
-      setDrawingData(data);
-    });
-  }, [socket]);
-
+  // Event handler for color change
   const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setColor(event.target.value);
   };
 
+  // Event handler for mode change
   const handleModeChange = (newMode: DrawingMode) => {
     setMode(newMode);
   };
 
+  // Function to clear canvas
   const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!context) return;
-    context.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0);
     setDrawingData([]);
+    setTextData([]);
 
-    socket?.emit("clearDraw", [], projectId);
+    socket?.emit("clear", projectId);
+  };
+
+  // Event handler for double click
+  const handleDoubleClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const canvasBounds = canvas.getBoundingClientRect();
+    const x = event.clientX - canvasBounds.left;
+    const y = event.clientY - canvasBounds.top;
+
+    setInputPosition({ x, y });
+    setTextData((prevTextData) => [...prevTextData, { x, y, text: "" }]);
+  };
+
+  // Event handler for text change
+  const handleTextChange = (index: number, value: string) => {
+    setTextData((prevTextData) => {
+      const updatedTextData = [...prevTextData];
+      updatedTextData[index].text = value;
+      socket?.emit("addText", updatedTextData);
+      return updatedTextData;
+    });
   };
 
   return (
@@ -302,24 +419,28 @@ const DrawingCanvas = () => {
           <Button
             size={"sm"}
             onClick={() => handleModeChange(DrawingMode.Freehand)}
+            variant={"outline"}
           >
             <Pen />
           </Button>
           <Button
             size={"sm"}
             onClick={() => handleModeChange(DrawingMode.Rectangle)}
+            variant={"outline"}
           >
             <RectangleHorizontal />
           </Button>
           <Button
             size={"sm"}
             onClick={() => handleModeChange(DrawingMode.Circle)}
+            variant={"outline"}
           >
             <Circle />
           </Button>
           <Button
             size={"sm"}
             onClick={() => handleModeChange(DrawingMode.Line)}
+            variant={"outline"}
           >
             <PencilLine />
           </Button>
@@ -334,7 +455,28 @@ const DrawingCanvas = () => {
           height={window.innerHeight}
           width={window.innerWidth}
           ref={canvasRef}
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={endDrawing}
+          onMouseOut={endDrawing}
+          onDoubleClick={handleDoubleClick}
         ></canvas>
+        {inputPosition && (
+          <input
+            type="text"
+            style={{
+              position: "absolute",
+              top: inputPosition.y,
+              left: inputPosition.x,
+            }}
+            autoFocus
+            onBlur={() => setInputPosition(null)}
+            value={textData[textData.length - 1].text}
+            onChange={(e) =>
+              handleTextChange(textData.length - 1, e.target.value)
+            }
+          />
+        )}
       </div>
     </div>
   );

@@ -2,18 +2,17 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import express from "express";
 import { v4 as uuidV4 } from "uuid";
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, { cors: "*" });
-const PORT=process.env.PORT || 8001
+const PORT = process.env.PORT || 3001;
 
-
-app.get('/', (req,res) => {
-  res.send('response from socket-server')
-})
+app.get("/", (req, res) => {
+  res.send("response from socket-server");
+});
 
 io.on("connection", (socket) => {
   //one to one messaging handling events
@@ -35,7 +34,6 @@ io.on("connection", (socket) => {
     io.emit("memberUnActive", { projectId: data.projectId });
   });
 
-
   //one to one video calling events for web rtc
   socket.on("join room", (roomId) => {
     socket.join(roomId);
@@ -54,42 +52,45 @@ io.on("connection", (socket) => {
     socket.to(roomId).emit("ice-candidate", candidate);
   });
 
-
-
   // notification events
-  socket.on('notification-indicator', (data) => {
-    io.emit(`notification-receive-for-${data.receiverId}`, data)
-  })
+  socket.on("notification-indicator", (data) => {
+    io.emit(`notification-receive-for-${data.receiverId}`, data);
+  });
 
-  socket.on('memberActiveChange', (data) => {
-    console.log(data)
-    io.emit('memberActiveChange', data)
-  })
+  socket.on("memberActiveChange", (data) => {
+    io.emit("memberActiveChange", data);
+  });
 
+  // real time drawing events
+  socket.on("draw", (data, projectId) => {
+    socket.join(projectId);
 
-// real time drawing events
-socket.on('draw', (data,projectId) => {
-  console.log(projectId)
-  socket.join(projectId);
+    socket.broadcast.emit("draw", data);
+  });
 
-  socket.broadcast.emit('draw', data)
-})
+  socket.on("clear", (projectId) => {
+    socket.join(projectId);
 
-socket.on('clearDraw', (data,projectId) => {
-  console.log(data)
-  socket.join(projectId);
+    socket.broadcast.emit("clear");
+  });
 
-  socket.broadcast.emit('clearDraw', data)
-})
+  socket.on("clearRect", (data, projectId) => {
+    socket.join(projectId);
 
-socket.on('clearRect', (data,projectId) => {
-  console.log(data)
-  socket.join(projectId);
+    socket.broadcast.emit("clearRect", data);
+  });
 
-  socket.broadcast.emit('clearRect', data)
-})
+  // realtime multi player cursor events
+  socket.on("cursor", (data, projectId) => {
+    socket.join(projectId);
+    socket.broadcast.emit("cursor", data);
+  });
 
+  socket.on("addText", (data, projectId) => {
+    socket.join(projectId);
+
+    socket.broadcast.emit("addText", data);
+  });
 });
-
 
 server.listen(PORT, () => console.log("server listening on port ", PORT));

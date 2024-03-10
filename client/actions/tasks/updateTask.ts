@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import {TaskStatus} from '@prisma/client'
 
 
-export async function updateTask(taskId:string,description:string,deadline:Date,status:TaskStatus,attachment:string) {
+export async function updateTask(taskId:string,description:string,deadline:Date,status:TaskStatus,attachment:string,progress:number) {
     try {
         await prisma.task.update({
             where:{
@@ -14,6 +14,7 @@ export async function updateTask(taskId:string,description:string,deadline:Date,
                 description,
                 deadline,
                 status,
+                progress,
                 attachments:{
                     push: attachment
                 }

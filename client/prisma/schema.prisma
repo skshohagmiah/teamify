@@ -160,6 +160,7 @@ model Task {
       deadline DateTime?
       status   TaskStatus @default(To_do)
       position Int @default(1)
+      progress Int @default(0)
       attachments String[]
       comments Comment[]
       projectId String @db.ObjectId
