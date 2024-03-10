@@ -9,9 +9,10 @@ Teamify is a comprehensive team collaboration platform designed to streamline ta
 To clone the project repository and set up the development environment, follow these steps:
 
 ```bash
-git clone https://github.com/your-username/teamify.git
+git clone [https://github.com/your-username/teamify.git](https://github.com/skshohagmiah/teamify.git)
 cd teamify
 
+```
 
 Client
 To run the client-side application, navigate to the client directory and execute the following commands:
@@ -20,7 +21,7 @@ To run the client-side application, navigate to the client directory and execute
 cd client
 npm install
 npm run dev
-
+```
 
 Server
 To start the server, navigate to the socket_server directory and execute the following commands:
@@ -29,7 +30,7 @@ To start the server, navigate to the socket_server directory and execute the fol
 cd socket_server
 npm install
 npm run dev
-
+```
 
 Features
 Task Management: Organize tasks, assign them to team members, set deadlines, track task status, and monitor progress.
@@ -65,5 +66,4 @@ Express.js: A web application framework for Node.js, used for building the serve
 
 Socket.io: A library for real-time, bidirectional communication between web clients and servers.
 
-Contributors
 
