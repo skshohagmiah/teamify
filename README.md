@@ -32,7 +32,8 @@ npm install
 npm run dev
 ```
 
-Features
+## Features
+
 Task Management: Organize tasks, assign them to team members, set deadlines, track task status, and monitor progress.
 
 Real-Time Messaging and Video Calling: Seamlessly communicate with team members through real-time messaging and one-to-one video calling using WebRTC technology.
@@ -47,7 +48,8 @@ Member Management: Add and manage members within the project, assigning roles an
 
 Real-Time Notifications: Receive notifications in real-time for various events such as task assignments, video calls, file sharing, etc.
 
-Tech Stacks
+## Tech Stacks
+
 Next.js 14: A React framework for building server-side rendered web applications.
 
 Prisma: A modern database toolkit for Node.js and TypeScript.
