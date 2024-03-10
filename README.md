@@ -34,19 +34,19 @@ npm run dev
 
 ## Features
 
-Task Management: Organize tasks, assign them to team members, set deadlines, track task status, and monitor progress.
+### Task Management: Organize tasks, assign them to team members, set deadlines, track task status, and monitor progress.
 
-Real-Time Messaging and Video Calling: Seamlessly communicate with team members through real-time messaging and one-to-one video calling using WebRTC technology.
+### Real-Time Messaging and Video Calling: Seamlessly communicate with team members through real-time messaging and one-to-one video calling using WebRTC technology.
 
-Real-Time Video Conferencing: Conduct video conferences with multiple participants using the 100ms library for real-time communication.
+### Real-Time Video Conferencing: Conduct video conferences with multiple participants using the 100ms library for real-time communication.
 
-Real-Time Drawing: Collaboratively draw on a shared canvas with multiplayer cursors and text-write features.
+### Real-Time Drawing: Collaboratively draw on a shared canvas with multiplayer cursors and text-write features.
 
-File Sharing: Share files within the project with team members for easy collaboration and access to project-related resources.
+### File Sharing: Share files within the project with team members for easy collaboration and access to project-related resources.
 
-Member Management: Add and manage members within the project, assigning roles and permissions as needed.
+### Member Management: Add and manage members within the project, assigning roles and permissions as needed.
 
-Real-Time Notifications: Receive notifications in real-time for various events such as task assignments, video calls, file sharing, etc.
+### Real-Time Notifications: Receive notifications in real-time for various events such as task assignments, video calls, file sharing, etc.
 
 ## Tech Stacks
 
