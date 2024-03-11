@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import UserSelection from "./UserSelection";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import { createProject } from "@/actions/project/createProject";
