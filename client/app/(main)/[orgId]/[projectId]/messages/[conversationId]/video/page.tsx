@@ -76,8 +76,6 @@ export default function VideoCallPage() {
     initialize();
 
     
-
-
     return () => {
       if (localStream) {
         localStream.getTracks().forEach((track) => track.stop());
@@ -86,7 +84,7 @@ export default function VideoCallPage() {
         socket.disconnect();
       }
     };
-  }, []);
+  }, [ROOM_ID,localStream,projectId,callUser]);
 
   const callUser = async (userId, stream) => {
     const peerConnection = new RTCPeerConnection(configuration);

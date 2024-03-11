@@ -28,16 +28,17 @@ const ConversationBody = ({
   const { conversationId } = useParams();
   const messageRef = useRef<HTMLDivElement>(null);
 
-  socket?.on(`${conversationId}`, (data) => {
-    const newMessages = [...messages, data];
-    setMessages(newMessages);
-  });
-
+  
   useEffect(() => {
+    socket?.on(`${conversationId}`, (data) => {
+      const newMessages = [...messages, data];
+      setMessages(newMessages);
+    });
+
     if (messageRef.current) {
       messageRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages.length]);
+  }, [messages,conversationId,socket]);
 
   return (
     <div className="min-h-screen overflow-y-scroll flex-col flex justify-end  max-w-screen-2xl mx-auto w-full">
