@@ -1,7 +1,7 @@
 //@ts-nocheck
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import TasksHeader from "./TasksHeader";
 import TaskButton from "./TaskButton";
 import TaskItem from "./TaskItem";
@@ -9,6 +9,7 @@ import { Member, Comment, User, Task } from "@prisma/client";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { reorderTask } from "@/actions/tasks/reorderTask";
 import { useParams } from "next/navigation";
+import TaskContainerLoading from "./TaskContainerLoading";
 
 interface TaskContainerProps {
   members: (Member & {
@@ -67,7 +68,8 @@ const TasksContainer = ({
   };
 
   return (
-    <div>
+   <Suspense fallback={<TaskContainerLoading />}>
+     <div>
       <TasksHeader tasks={tasks} setTasks={setTasks} updateState={handleStateUpdate} members={members!} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="tasks">
@@ -99,6 +101,7 @@ const TasksContainer = ({
         </Droppable>
       </DragDropContext>
     </div>
+   </Suspense>
   );
 };
 

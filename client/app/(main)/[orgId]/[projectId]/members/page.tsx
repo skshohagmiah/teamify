@@ -29,7 +29,7 @@ const MembersPage = async ({ params }: { params: { projectId: string } }) => {
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center justify-around flex-col md:flex-row gap-2 bg-gray-50 p-1 rounded-sm mb-2"
+            className="flex items-center justify-between flex-col md:flex-row gap-2 bg-gray-50 p-1 rounded-sm mb-2"
           >
             <Image
               src={member.user.image as string}
@@ -52,7 +52,7 @@ const MembersPage = async ({ params }: { params: { projectId: string } }) => {
                 : "Member"}
             </p>
             {
-              member.user.id === (member.project && member.project.ownerId) && (
+              member.user.id !== (member.project && member.project.ownerId) && (
                 <DeleteMember disabled={member.user.id === (member.project && member.project.ownerId)} memberId={member.id}/>
               )
             }

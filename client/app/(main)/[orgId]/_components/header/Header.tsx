@@ -11,7 +11,11 @@ const Header = async() => {
   const currentUser = await getCurrentUser();
   const organizations = await prisma.organization.findMany({
     where:{
-      ownerId:currentUser?.id
+      members:{
+        some:{
+          userId:currentUser?.id as string
+        }
+      }
     }
   })
 
