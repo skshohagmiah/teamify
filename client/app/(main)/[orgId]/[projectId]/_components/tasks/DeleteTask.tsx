@@ -14,7 +14,7 @@ interface DeleteTaskProps {
   task:Task
 }
 
-const DeleteTask = ({ memberId, ownerId, userId }: DeleteTaskProps) => {
+const DeleteTask = ({ memberId, ownerId, userId, task }: DeleteTaskProps) => {
   const {orgId, projectId, taskId} = useParams()
   const [loading,setLoading] = useState(false);
   const router = useRouter()
@@ -28,7 +28,7 @@ const DeleteTask = ({ memberId, ownerId, userId }: DeleteTaskProps) => {
 
   return (
     <div className="flex gap-2 items-center">
-      <EditTask memberId={memberId} userId={userId} ownerId={ownerId}/>
+      <EditTask task={task} memberId={memberId} userId={userId} ownerId={ownerId}/>
       <Button
        onClick={handleTaskDelete}
         disabled={memberId !== userId || ownerId !== userId}

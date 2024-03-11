@@ -26,9 +26,10 @@ export default async function Home() {
     take: 1,
   });
 
+
   if (!currentUser?.email) {
     return (
-      <div>
+      <div >
         <Header />
         <Hero />
         <Features />

@@ -64,7 +64,7 @@ export async function isOtherUserActive(otherUserId:string,projectId:string) {
         return member?.isActive
         
     } catch (error) {
-        
+        console.log('otherr user active error', error)
     }
 }
 
@@ -86,6 +86,6 @@ export async function otherMemberId(conversationId:string) {
         return otherUserId
         
     } catch (error) {
-        
+        console.log('other memeber id error', error)
     }
 }

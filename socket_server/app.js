@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
   //member unActive detection events
   socket.on("memberUnActive", (data) => {
-    io.emit("memberUnActive", { projectId: data.projectId });
+    socket.to(socket.id).emit("memberUnActive", { projectId: data.projectId });
   });
 
   //one to one video calling events for web rtc

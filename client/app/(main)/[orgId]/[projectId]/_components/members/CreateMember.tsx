@@ -31,7 +31,7 @@ const CreateMember = () => {
         setIsCopied(false)
         setLoading(true)
         const token = await generateToken()
-        setToken(`${process.env.NEXT_PUBLIC_INVITE_URL}/${orgId}/${projectId}/members/invite?token=${token}`)
+        setToken(`https://teamify-tau.vercel.app/${orgId}/${projectId}/members/invite?token=${token}`)
 
         setLoading(false)
       } catch (error) {

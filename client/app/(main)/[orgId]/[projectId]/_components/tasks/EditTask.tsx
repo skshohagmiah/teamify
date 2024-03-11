@@ -23,24 +23,25 @@ import { Input } from "@/components/ui/input";
 import { TaskDatePicker } from "./TaskDatePicker";
 import { useParams, useRouter } from "next/navigation";
 import { updateTask } from "@/actions/tasks/updateTask";
-import {TaskStatus} from '@prisma/client'
+import {TaskStatus,Task} from '@prisma/client'
 
 interface EditTaskProps {
   ownerId: string;
   memberId: string;
   userId: string;
+  task:Task
 }
 
-const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
-  const [description, setDescription] = useState("");
-  const [deadlineDate, setDeadlineDate] = useState<Date>();
-  const [status, setStatus] = useState(TaskStatus.To_do);
-  const [attahment, setAttahment] = useState("");
-  const [progres, setProgress] = useState(0)
+const EditTask = ({ memberId, ownerId, userId, task }: EditTaskProps) => {
+  const [description, setDescription] = useState(task.description);
+  const [deadlineDate, setDeadlineDate] = useState<Date>(task.deadline as Date);
+  const [status, setStatus] = useState(task.status);
+  const [attahment, setAttahment] = useState('');
+  const [progres, setProgress] = useState(task.progress)
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { orgId, projectId, taskId } = useParams();
+  const {taskId } = useParams();
   const router = useRouter();
 
 
@@ -76,6 +77,7 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
               <Label htmlFor="description">Change description :</Label>
               <Input
                 placeholder="task description"
+                value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full p-2"
               />
@@ -85,6 +87,7 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
               <Input
                 placeholder="update progres in number"
                 type="number"
+                value={progres}
                 onChange={(e) => setProgress(Number(e.target.value))}
                 className="w-full p-2"
               />
@@ -93,7 +96,7 @@ const EditTask = ({ memberId, ownerId, userId }: EditTaskProps) => {
               <Label>Change Deadline Date</Label>
               <TaskDatePicker
                 date={deadlineDate as Date}
-                setDeadline={(date) => setDeadlineDate(date)}
+                setDeadline={(date) => setDeadlineDate(date!)}
               />
             </div>
             <div>
