@@ -9,8 +9,8 @@ Teamify is a comprehensive team collaboration platform designed to streamline ta
 To clone the project repository and set up the development environment, follow these steps:
 
 ```bash
-git clone [https://github.com/skshohagmiah/teamify.git](https://github.com/skshohagmiah/teamify.git)
-cd teamify
+git clone https://github.com/skshohagmiah/teamify.git
+cd teamif
 
 ```
 
@@ -70,5 +70,7 @@ npm run dev
 
 
 ## Project Link : ( Live Link)(https://teamify-tau.vercel.app/)
+
+invite link: http://localhost:3000/65ede94bfef85e9247aa4d38/65ede970fef85e9247aa4d3a/members/invite?token=555e63f8-5bb1-467d-8bfc-8a0fc3e4b2d2
 
 
