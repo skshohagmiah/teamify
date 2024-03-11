@@ -71,6 +71,4 @@ npm run dev
 
 ## Project Link : ( Live Link)(https://teamify-tau.vercel.app/)
 
-invite link: https://teamify-tau.vercel.app/65ede94bfef85e9247aa4d38/65ede970fef85e9247aa4d3a/members/invite?token=86db3bf6-076f-4f4b-9873-7603975a41bd
-
 
