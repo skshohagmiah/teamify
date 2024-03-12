@@ -57,9 +57,6 @@ io.on("connection", (socket) => {
     io.emit(`notification-receive-for-${data.receiverId}`, data);
   });
 
-  socket.on("memberActiveChange", (data) => {
-    io.emit("memberActiveChange", data);
-  });
 
   // real time drawing events
   socket.on("draw", (data, projectId) => {

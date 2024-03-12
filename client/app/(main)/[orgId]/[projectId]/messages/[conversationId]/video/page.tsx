@@ -47,9 +47,6 @@ export default function VideoCallPage() {
           isGroup: false,
           receiverId: otherUserId,
         });
-        socket?.emit("single-notification", {
-          receiverId: otherUserId,
-        });
         socket.emit('notification-indicator', {receiverId:otherMemberId,shouldIndicate:true})
       }
       onCreateNotication()
@@ -180,7 +177,7 @@ export default function VideoCallPage() {
   };
 
   return (
-    <div className="h-[90vh] w-full p-4 space-y-2 bg-gray-50">
+    <div className="h-[90vh] w-full p-4 space-y-2">
       <div className="flex items-center justify-between gap-2 flex-col lg:flex-row h-full w-full">
         {localStream && (
           <video
