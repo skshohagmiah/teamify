@@ -25,7 +25,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: cspHeader.replace(/\n/g, 'http://ec2-13-234-135-50.ap-south-1.compute.amazonaws.com'),
+            value: cspHeader.replace(/\n/g, '//ec2-13-234-135-50.ap-south-1.compute.amazonaws.com'),
           },
         ],
       },

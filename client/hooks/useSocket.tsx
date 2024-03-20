@@ -6,7 +6,7 @@ const useSocket = () => {
     const [socket,setSocket] = useState<Socket>()
 
     useEffect(() => {
-        const socket = io("http://ec2-13-234-135-50.ap-south-1.compute.amazonaws.com");
+        const socket = io("//ec2-13-234-135-50.ap-south-1.compute.amazonaws.com");
 
         setSocket(socket)
 
