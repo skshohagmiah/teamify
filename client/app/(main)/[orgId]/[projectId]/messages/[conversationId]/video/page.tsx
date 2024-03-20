@@ -6,7 +6,7 @@ import { createNotification } from "@/actions/notification/createNotification";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import {io} from "socket.io-client";
 
 export default function VideoCallPage() {
   const [localStream, setLocalStream] = useState(null);

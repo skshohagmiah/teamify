@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Image } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 import useSocket from "@/hooks/useSocket";
 import { useParams, useRouter } from "next/navigation";
@@ -28,6 +28,16 @@ const MessageInput = ({
   const [imageUrl, setImageUrl] = useState("");
   const [text, setText] = useState("");
 
+
+  useEffect(() => {
+   async function updateLastSeenOnMount(){
+    await updateLastSeen(memberId,new Date())
+   }
+
+   updateLastSeenOnMount()
+   
+  },[memberId])
+
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     socket?.emit("message-send", {
@@ -50,10 +60,7 @@ const MessageInput = ({
         isGroup: false,
         receiverId: otherUserId,
       });
-      socket?.emit("notification-on-off", true);
-      socket?.emit("single-notification", {
-        receiverId: otherUserId,
-      });
+      socket?.emit("notification-indicator", {receiverId:otherUserId, shouldIndicate:true});
     }
 
     let timeOutID;
