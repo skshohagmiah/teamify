@@ -111,7 +111,7 @@ export default function VideoCallPage() {
         socket.disconnect();
       }
     };
-  }, [ROOM_ID, localStream, projectId,callUser]);
+  }, [ROOM_ID, projectId]);
 
 
   const handleOffer = async (offer, userId) => {
