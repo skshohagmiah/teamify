@@ -4,20 +4,19 @@
 import { otherMemberId } from "@/actions/messages/updateMember";
 import { createNotification } from "@/actions/notification/createNotification";
 import { Button } from "@/components/ui/button";
-import useSocket from "@/hooks/useSocket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 export default function VideoCallPage() {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [muteAudio, setMuteAudio] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
+  const [socket, setSocket] = useState();
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const { conversationId: ROOM_ID, orgId, projectId } = useParams();
   const router = useRouter();
-  const {socket} = useSocket()
-
 
   const configuration = {
     iceServers: [
@@ -28,6 +27,9 @@ export default function VideoCallPage() {
   };
 
   useEffect(() => {
+    const socket = io("https://teamify-socket-server.chickenkiller.com");
+
+    setSocket(socket);
 
     const initialize = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -38,7 +40,6 @@ export default function VideoCallPage() {
 
       const otherUserId = await otherMemberId(ROOM_ID);
 
-
       const onCreateNotication = async () => {
         await createNotification({
           content: `has Called you, go to chats`,
@@ -46,9 +47,12 @@ export default function VideoCallPage() {
           isGroup: false,
           receiverId: otherUserId,
         });
-        socket.emit('notification-indicator', {receiverId:otherMemberId,shouldIndicate:true})
-      }
-      onCreateNotication()
+        socket.emit("notification-indicator", {
+          receiverId: otherMemberId,
+          shouldIndicate: true,
+        });
+      };
+      onCreateNotication();
 
       socket.emit("join room", ROOM_ID);
 
@@ -71,7 +75,6 @@ export default function VideoCallPage() {
 
     initialize();
 
-    
     return () => {
       if (localStream) {
         localStream.getTracks().forEach((track) => track.stop());
@@ -80,14 +83,14 @@ export default function VideoCallPage() {
         socket.disconnect();
       }
     };
-  }, [ROOM_ID,localStream,projectId,callUser]);
+  }, [ROOM_ID, localStream, projectId, callUser]);
 
   const callUser = async (userId, stream) => {
     const peerConnection = new RTCPeerConnection(configuration);
 
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        await socket.emit("ice-candidate", event.candidate, ROOM_ID);
+        socket.emit("ice-candidate", event.candidate, ROOM_ID);
       }
     };
 
@@ -98,7 +101,7 @@ export default function VideoCallPage() {
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
 
-    await socket.emit("offer", offer, userId);
+    socket.emit("offer", offer, userId);
   };
 
   const handleOffer = async (offer, userId) => {
@@ -106,7 +109,7 @@ export default function VideoCallPage() {
 
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        await socket.emit("ice-candidate", event.candidate, ROOM_ID);
+        socket.emit("ice-candidate", event.candidate, ROOM_ID);
       }
     };
 
@@ -118,7 +121,7 @@ export default function VideoCallPage() {
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
 
-    await socket.emit("answer", answer, userId);
+    socket.emit("answer", answer, userId);
   };
 
   const handleAnswer = async (answer) => {
