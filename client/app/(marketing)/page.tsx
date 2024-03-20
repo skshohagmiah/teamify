@@ -6,16 +6,17 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import CreateOrganization from "@/components/modal/CreateOrganization";
+import Head from "next/head";
 
 export default async function Home() {
   const currentUser = await getCurrentUser();
   const organization = await prisma.organization.findMany({
     where: {
-      members:{
-        some:{
-          userId:currentUser?.id
-        }
-      }
+      members: {
+        some: {
+          userId: currentUser?.id,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -26,10 +27,9 @@ export default async function Home() {
     take: 1,
   });
 
-
   if (!currentUser?.email) {
     return (
-      <div >
+      <div>
         <Header />
         <Hero />
         <Features />

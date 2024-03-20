@@ -27,7 +27,7 @@ export default function VideoCallPage() {
   };
 
   useEffect(() => {
-    const socket = io("http://ec2-13-234-135-50.ap-south-1.compute.amazonaws.com:3001/");
+    const socket = io("http://ec2-13-234-135-50.ap-south-1.compute.amazonaws.com");
     setSocket(socket);
 
     const initialize = async () => {

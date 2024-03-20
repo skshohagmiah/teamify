@@ -6,6 +6,7 @@ import Link from "next/link";
 import DeleteProject from "./_components/project/DeleteProject";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
+
 const OrganizationIdPage = async ({
   params,
 }: {
@@ -39,45 +40,45 @@ const OrganizationIdPage = async ({
   const generateRandomNumber = () => Math.floor(Math.random() * 10);
 
   return (
-    <div className="bg-white h-screen">
-      <Header />
-      <div className="max-w-screen-2xl mx-auto mt-2 md:mt-0 ">
-        {projects.length === 0 ? (
-          <div className="h-screen w-full flex-col flex items-center justify-center gap-2">
-            <p className="text-xl text-center font-semibold text-capitalize m-2 p-2 text-rose-500 rounded-md">
-              Sorry, No Project is Found. Please Create a Project To
-              Collaborate.
-            </p>
-            <CreateProjectModal />
-          </div>
-        ) : (
-          <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap md:p-4">
-            {projects.map((project) => (
-              <div className="relative group" key={project.id}>
-                <Link
-                  href={`/${params.orgId}/${project.id}/tasks`}
-                  key={project.id}
-                  className={`${
-                    randomColors[generateRandomNumber()]
-                  } w-[95vw] md:w-[300px] h-[200px] rounded-md hover:opacity-60 transition shadow-md flex items-center justify-center flex-col gap-2`}
-                >
-                  <p className="text-xl font-medium capitalize">
-                    {project.name}
-                  </p>
-                  <small>{project.description}</small>
-                </Link>
-                {currentUser?.id === project.ownerId && (
-                  <div className="absolute top-2 right-2 hidden group-hover:block opacity-100">
-                    <DeleteProject projectId={project.id} />
-                  </div>
-                )}
-              </div>
-            ))}
-            <CreateProjectModal />
-          </div>
-        )}
+      <div className="bg-white h-screen">
+        <Header />
+        <div className="max-w-screen-2xl mx-auto mt-2 md:mt-0 ">
+          {projects.length === 0 ? (
+            <div className="h-screen w-full flex-col flex items-center justify-center gap-2">
+              <p className="text-xl text-center font-semibold text-capitalize m-2 p-2 text-rose-500 rounded-md">
+                Sorry, No Project is Found. Please Create a Project To
+                Collaborate.
+              </p>
+              <CreateProjectModal />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap md:p-4">
+              {projects.map((project) => (
+                <div className="relative group" key={project.id}>
+                  <Link
+                    href={`/${params.orgId}/${project.id}/tasks`}
+                    key={project.id}
+                    className={`${
+                      randomColors[generateRandomNumber()]
+                    } w-[95vw] md:w-[300px] h-[200px] rounded-md hover:opacity-60 transition shadow-md flex items-center justify-center flex-col gap-2`}
+                  >
+                    <p className="text-xl font-medium capitalize">
+                      {project.name}
+                    </p>
+                    <small>{project.description}</small>
+                  </Link>
+                  {currentUser?.id === project.ownerId && (
+                    <div className="absolute top-2 right-2 hidden group-hover:block opacity-100">
+                      <DeleteProject projectId={project.id} />
+                    </div>
+                  )}
+                </div>
+              ))}
+              <CreateProjectModal />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 
