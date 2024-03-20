@@ -19,6 +19,7 @@ export default function VideoCallPage() {
   const router = useRouter();
   const {socket} = useSocket()
   console.log('video calling page')
+  console.log(socket)
 
   const configuration = {
     iceServers: [
@@ -34,7 +35,30 @@ export default function VideoCallPage() {
     setIsMounted(true)
   },[])
 
+
+  const callUser = async (userId, stream) => {
+    const peerConnection = new RTCPeerConnection(configuration);
+
+    peerConnection.onicecandidate = async (event) => {
+      if (event.candidate) {
+        socket?.emit("ice-candidate", event.candidate, ROOM_ID);
+      }
+    };
+
+    stream
+      .getTracks()
+      .forEach((track) => peerConnection.addTrack(track, stream));
+
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+
+    socket?.emit("offer", offer, userId);
+  };
+
+
+
   useEffect(() => {
+
     const initialize = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -51,28 +75,28 @@ export default function VideoCallPage() {
           isGroup: false,
           receiverId: otherUserId,
         });
-        socket.emit("notification-indicator", {
+        socket?.emit("notification-indicator", {
           receiverId: otherMemberId,
           shouldIndicate: true,
         });
       };
       onCreateNotication();
 
-      socket.emit("join room", ROOM_ID);
+      socket?.emit("join room", ROOM_ID);
 
-      socket.on("other user", (userId) => {
+      socket?.on("other user", (userId) => {
         callUser(userId, stream);
       });
 
-      socket.on("offer", async (offer, userId) => {
+      socket?.on("offer", async (offer, userId) => {
         await handleOffer(offer, userId);
       });
 
-      socket.on("answer", async (answer) => {
+      socket?.on("answer", async (answer) => {
         await handleAnswer(answer);
       });
 
-      socket.on("ice-candidate", async (candidate) => {
+      socket?.on("ice-candidate", async (candidate) => {
         await handleNewICECandidateMsg(candidate);
       });
     };
@@ -87,33 +111,15 @@ export default function VideoCallPage() {
         socket.disconnect();
       }
     };
-  }, [ROOM_ID, localStream, projectId, callUser]);
+  }, [ROOM_ID, localStream, projectId,socket,callUser]);
 
-  const callUser = async (userId, stream) => {
-    const peerConnection = new RTCPeerConnection(configuration);
-
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        socket.emit("ice-candidate", event.candidate, ROOM_ID);
-      }
-    };
-
-    stream
-      .getTracks()
-      .forEach((track) => peerConnection.addTrack(track, stream));
-
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-
-    socket.emit("offer", offer, userId);
-  };
 
   const handleOffer = async (offer, userId) => {
     const peerConnection = new RTCPeerConnection(configuration);
 
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        socket.emit("ice-candidate", event.candidate, ROOM_ID);
+        socket?.emit("ice-candidate", event.candidate, ROOM_ID);
       }
     };
 
@@ -125,7 +131,7 @@ export default function VideoCallPage() {
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
 
-    socket.emit("answer", answer, userId);
+    socket?.emit("answer", answer, userId);
   };
 
   const handleAnswer = async (answer) => {
@@ -187,10 +193,6 @@ export default function VideoCallPage() {
     return null
   }
 
-  
-  if(!socket){
-    return null
-  }
 
   return (
     <div className="h-[90vh] w-full p-4 space-y-2">
