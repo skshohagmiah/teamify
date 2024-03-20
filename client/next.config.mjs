@@ -12,8 +12,8 @@ const cspHeader = `
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-    block-all-mixed-content;
-    upgrade-insecure-requests;`
+    allow-all-mixed-content;
+    allow-insecure-requests;`
 
 
 const nextConfig = {
