@@ -14,6 +14,7 @@ export default function VideoCallPage() {
   const [muteAudio, setMuteAudio] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
   const [socket, setSocket] = useState();
+  const [isMounted, setIsMounted] = useState(false)
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const { conversationId: ROOM_ID, orgId, projectId } = useParams();
   const router = useRouter();
@@ -26,10 +27,15 @@ export default function VideoCallPage() {
     ],
   };
 
+
   useEffect(() => {
     const socket = io("https://teamify-socket-server.chickenkiller.com");
-
     setSocket(socket);
+
+    setIsMounted(true)
+  },[])
+
+  useEffect(() => {
 
     const initialize = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -177,6 +183,11 @@ export default function VideoCallPage() {
       socket.disconnect();
     }
   };
+
+
+  if(!isMounted){
+    return null
+  }
 
   return (
     <div className="h-[90vh] w-full p-4 space-y-2">
