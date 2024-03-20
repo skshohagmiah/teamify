@@ -18,6 +18,7 @@ export default function VideoCallPage() {
   const { conversationId: ROOM_ID, orgId, projectId } = useParams();
   const router = useRouter();
   const {socket} = useSocket()
+  console.log('video calling page')
 
   const configuration = {
     iceServers: [
@@ -26,14 +27,14 @@ export default function VideoCallPage() {
       { urls: "stun:numb.viagenie.ca" },
     ],
   };
-
+  
+  
 
   useEffect(() => {
     setIsMounted(true)
   },[])
 
   useEffect(() => {
-
     const initialize = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -183,6 +184,11 @@ export default function VideoCallPage() {
 
 
   if(!isMounted){
+    return null
+  }
+
+  
+  if(!socket){
     return null
   }
 
