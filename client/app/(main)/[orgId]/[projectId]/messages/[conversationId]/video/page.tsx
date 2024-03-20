@@ -4,19 +4,20 @@
 import { otherMemberId } from "@/actions/messages/updateMember";
 import { createNotification } from "@/actions/notification/createNotification";
 import { Button } from "@/components/ui/button";
+import useSocket from "@/hooks/useSocket";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {io} from "socket.io-client";
 
 export default function VideoCallPage() {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
-  const [socket, setSocket] = useState(null);
   const [muteAudio, setMuteAudio] = useState(false);
   const [showVideo, setShowVideo] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const { conversationId: ROOM_ID, orgId, projectId } = useParams();
   const router = useRouter();
+  const {socket} = useSocket()
+
 
   const configuration = {
     iceServers: [
@@ -27,8 +28,6 @@ export default function VideoCallPage() {
   };
 
   useEffect(() => {
-    const socket = io("https://teamify-socket-server.chickenkiller.com");
-    setSocket(socket);
 
     const initialize = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
