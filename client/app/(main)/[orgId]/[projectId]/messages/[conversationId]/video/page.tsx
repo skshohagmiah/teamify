@@ -18,8 +18,9 @@ export default function VideoCallPage() {
   const { conversationId: ROOM_ID, orgId, projectId } = useParams();
   const router = useRouter();
   const {socket} = useSocket()
-  console.log('video calling page')
-  console.log(socket)
+
+  console.log(localStream),
+  console.log(remoteStream)
 
   const configuration = {
     iceServers: [
