@@ -27,7 +27,7 @@ export default function VideoCallPage() {
   };
 
   useEffect(() => {
-    const socket = io("//ec2-13-234-135-50.ap-south-1.compute.amazonaws.com");
+    const socket = io("https://teamify-socket-server.chickenkiller.com");
     setSocket(socket);
 
     const initialize = async () => {
