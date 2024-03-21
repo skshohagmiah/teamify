@@ -53,7 +53,7 @@ const MenuComponent = () => {
               </Link>
               <Link
                 href={`/${orgId}/${projectId}/messages`}
-                className="text-muted-foreground flex items-center gap-2"
+                className="flex items-center gap-2"
               >
                 <MessageCircle />
                 <p>Messaging</p>

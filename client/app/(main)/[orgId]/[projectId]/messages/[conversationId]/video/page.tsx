@@ -19,7 +19,6 @@ export default function VideoCallPage() {
   const router = useRouter();
   const { socket } = useSocket();
 
-  console.log('local stream',localStream), console.log('remote stream',remoteStream);
 
   const configuration = {
     iceServers: [
@@ -110,7 +109,7 @@ export default function VideoCallPage() {
         socket.disconnect();
       }
     };
-  }, [ROOM_ID, projectId]);
+  }, [ROOM_ID, projectId,socket]);
 
   const handleOffer = async (offer, userId) => {
     const peerConnection = new RTCPeerConnection(configuration);

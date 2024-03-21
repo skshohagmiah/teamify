@@ -26,7 +26,7 @@ const Features = () => {
 
       <div className="flex items-center gap-6 flex-wrap-reverse lg:flex-nowrap mt-4 lg:m-8">
         <div>
-          <h3 className="text-2xl font-medium mb-1">Tasks assignment Task deadlines And more</h3>
+          <h3 className="text-2xl font-medium mb-1">Tasks assignment, Task Tracking And more</h3>
           <p className="text-sm p-2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse eius,
             ex fugit possimus nam impedit magnam eveniet officiis

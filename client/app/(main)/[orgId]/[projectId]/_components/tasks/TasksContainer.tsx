@@ -77,8 +77,8 @@ const TasksContainer = ({
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {tasks.length === 0 ? (
                 <div className="flex flex-col gap-2 items-center justify-center w-full h-screen">
-                  <p className="text-rose-500 font-medium text-xl text-center">
-                    No Task Found For This Project, Please Create A Project To
+                  <p className="text-rose-500 font-medium text-lg text-center">
+                    No Task Found For This Project, Please Create A Task To
                     Continue
                   </p>
                   <TaskButton  updateState={handleStateUpdate} members={members} />

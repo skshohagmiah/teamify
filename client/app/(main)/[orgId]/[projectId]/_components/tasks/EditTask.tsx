@@ -60,7 +60,7 @@ const EditTask = ({ memberId, ownerId, userId, task }: EditTaskProps) => {
           <Button
             size={"sm"}
             onClick={() => setIsOpen(true)}
-            disabled={memberId !== userId || ownerId !== userId}
+            disabled={!(memberId === userId || userId === ownerId)}
           >
             Edit Task
           </Button>

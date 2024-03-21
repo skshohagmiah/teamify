@@ -28,8 +28,8 @@ const ChatsContainer = ({ members }: ChatsContainerProps) => {
 
   if (members.length === 0) {
     return (
-      <div className="flex items-center justify-center text-rose-500 h-screen">
-        No chats are found !
+      <div className="flex items-center justify-center text-xl text-rose-500 h-screen">
+       Sorry, No chats are found !
       </div>
     );
   }

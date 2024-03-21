@@ -4,7 +4,7 @@ import React from 'react'
 
 const loading = () => {
   return (
-    <div className='w-full'>
+    <div className='w-full h-screen'>
         <Skeleton className='h-[50px] w-full m-2'/>
         <div className='flex items-center m-2 gap-4 flex-wrap w-full'>
             <Skeleton className='w-[300px] h-[200px] rounded-md'/>

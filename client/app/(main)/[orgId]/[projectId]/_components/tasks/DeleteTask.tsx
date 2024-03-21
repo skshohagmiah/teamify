@@ -18,6 +18,7 @@ const DeleteTask = ({ memberId, ownerId, userId, task }: DeleteTaskProps) => {
   const {orgId, projectId, taskId} = useParams()
   const [loading,setLoading] = useState(false);
   const router = useRouter()
+  console.log(memberId, ownerId,userId)
 
   const handleTaskDelete = async() => {
     setLoading(true);
@@ -31,7 +32,7 @@ const DeleteTask = ({ memberId, ownerId, userId, task }: DeleteTaskProps) => {
       <EditTask task={task} memberId={memberId} userId={userId} ownerId={ownerId}/>
       <Button
        onClick={handleTaskDelete}
-        disabled={memberId !== userId || ownerId !== userId}
+       disabled={!(memberId === userId || userId === ownerId)}
         className=""
         size={"sm"}
         variant={"destructive"}
